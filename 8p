@@ -1,0 +1,46 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
+import matplotlib.pyplot as plt
+data={
+    'Distance':np.random.randint(1,90,20),
+    'Speed':np.random.randint(1,60,20)
+}
+df=pd.DataFrame(data)
+print(df.head())
+x=df['Distance'].values
+y=df['Speed'].values
+X=np.array(list(zip(x,y)))
+
+plt.scatter(x,y)
+plt.title("Scatter plot of Distance vs Speed")
+plt.xlabel("Distance")
+plt.ylabel("Speed")
+plt.show()
+
+gmm=GaussianMixture(n_components=4,random_state=42)
+gmm_lable=gmm.fit_predict(X)
+
+plt.title("Expected Maximization Clustering")
+plt.scatter(X[:,0],X[:,1],c=gmm_lable,s=50,cmap='viridis')
+plt.xlabel('Distance')
+plt.ylabel('Speed')
+plt.show()
+
+print("GMM Means:",gmm.means_)
+print('GMM Covariance:\n',gmm.covariances_)
+
+kmeans = KMeans(n_clusters=4, random_state=42)
+kmeans_labels = kmeans.fit_predict(X)
+plt.title("Kmean clustering")
+plt.scatter(X[:,0],X[:,1],c=kmeans_lable,s=50,cmap='rainbow')
+plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1],
+            color='black', marker='X', s=200, label="Centroids")
+plt.title("K-Means Clustering")
+plt.xlabel("Distance")
+plt.ylabel("Speed")
+plt.legend()
+plt.show()
+print("Cluster Centers:\n", kmeans.cluster_centers_)
+
