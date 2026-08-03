@@ -1,0 +1,22 @@
+import numpy as np
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier,export_text
+data={
+    'Outlook':np.random.choice(['sunny','overcast','rain'],size=10),
+    'Temperature':np.random.choice(['hot','mild','cool'],size=10),
+    'Humidity':np.random.choice(['high','normal'],size=10),
+    'Wind':np.random.choice(['weak','strong'],size=10),
+    'Play':np.random.choice(['yes','no'],size=10)
+}
+df=pd.DataFrame(data)
+print(df)
+df_encode=df.apply(lambda x: pd.factorize(x)[0])
+X=df_encode.drop('Play',axis=1)
+y=df_encode['Play']
+model=DecisionTreeClassifier()
+model.fit(X, y)
+tree_rules=export_text(model, feature_names=list(X.columns))
+print(tree_rules)
+sample=pd.DataFrame([[1,0,1,0]],columns=X.columns)
+prediction=model.predict(sample)
+print("Prediction:",'Yes' if prediction[0]==1 else 'No')
